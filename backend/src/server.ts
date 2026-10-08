@@ -3,6 +3,7 @@ import productsRouter from './routes/products.js';
 import authRouter from './routes/auth.js';
 import cartRouter from './routes/cart.js';
 import ordersRouter from './routes/orders.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 const app = express();
 
@@ -19,8 +20,11 @@ app.use((req: Request, res: Response) => {
   res.status(404).send({ error: 'Not Found' });
 });
 
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
