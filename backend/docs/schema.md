@@ -31,16 +31,19 @@ People who can log in: customers and admins.
 
 Items for sale in the catalog.
 
-| Column      | Type        | Rules                              | Why                                                                      |
-| ----------- | ----------- | ---------------------------------- | ------------------------------------------------------------------------ |
-| id          | SERIAL      | PRIMARY KEY                        | Unique id                                                                |
-| name        | TEXT        | NOT NULL                           | Shown in catalog and orders                                              |
-| description | TEXT        | NOT NULL, DEFAULT ''               | Product detail text; empty string instead of NULL keeps code simple      |
-| price_cents | INTEGER     | NOT NULL, CHECK (price_cents >= 0) | Price in cents (999 = €9.99); can't be negative                          |
-| stock       | INTEGER     | NOT NULL, CHECK (stock >= 0)       | Units available; the database itself refuses to go below 0               |
-| image_url   | TEXT        | (nullable)                         | A product can exist before it has a photo                                |
-| created_at  | TIMESTAMPTZ | NOT NULL, DEFAULT now()            | When the product was added                                               |
-| deleted_at  | TIMESTAMPTZ | (nullable)                         | NULL = active; a date = soft-deleted (hidden, but old orders still work) |
+| Column                 | Type        | Rules                                                    | Why                                                                      |
+| ---------------------- | ----------- | -------------------------------------------------------- | ------------------------------------------------------------------------ |
+| id                     | SERIAL      | PRIMARY KEY                                              | Unique id                                                                |
+| name                   | TEXT        | NOT NULL                                                 | Shown in catalog and orders                                              |
+| description            | TEXT        | NOT NULL, DEFAULT ''                                     | Product detail text; empty string instead of NULL keeps code simple      |
+| price_cents            | INTEGER     | NOT NULL, CHECK (price_cents >= 0)                       | Price in cents (999 = €9.99); can't be negative                          |
+| stock                  | INTEGER     | NOT NULL, CHECK (stock >= 0)                             | Units available; the database itself refuses to go below 0               |
+| image_url              | TEXT        | (nullable)                                               | A product can exist before it has a photo                                |
+| created_at             | TIMESTAMPTZ | NOT NULL, DEFAULT now()                                  | When the product was added                                               |
+| deleted_at             | TIMESTAMPTZ | (nullable)                                               | NULL = active; a date = soft-deleted (hidden, but old orders still work) |
+| category               | TEXT        | NOT NULL, DEFAULT 'uncategorized', indexed               | Drives the catalog filter pills (e.g. `kitchen`, `home`)                 |
+| compare_at_price_cents | INTEGER     | (nullable), CHECK (compare_at_price_cents > price_cents) | Original price; set = on sale ("Sale" tag + struck-through price)        |
+| is_new                 | BOOLEAN     | NOT NULL, DEFAULT false                                  | Shows the "New" tag; an explicit flag so the admin decides, not the date |
 
 ## carts
 
